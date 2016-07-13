@@ -30,7 +30,7 @@
 import sys
 import os
 import string
-import numpy as np
+import argparse
 from pylab import *
 
 # Define template
@@ -126,20 +126,24 @@ td {
 # Main function
 def main():
     
-    # Get QA daily directory from command line args
-    if len(sys.argv) > 1:
-        qa_dir = sys.argv[1]
-    else:
-        qa_dir = os.getcwd()
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='QA reporting for in vivo fMRI timeseries')
+    parser.add_argument('-i', '--qa_dir', help="CBICQAlive directory (*.qalive)")
+
+    # Parse command line arguments
+    args = parser.parse_args()
+    qa_dir = args.qa_dir
     
     print('  Creating daily QA report for ' + qa_dir)
 
-    #
-    # QA Acquisition Info
-    #
-
     # Load QA acquisition info
-    qa_info_file = os.path.join(qa_dir, 'qa_info.txt')
+    try:
+        qa_info_file = os.path.join(qa_dir, 'qa_info.txt')
+    except:
+        print('*** Could not open qa_info.txt - exiting')
+        sys.exit(1)
+
+    # Load text from info file
     x = np.loadtxt(qa_info_file)
     
     # Parse QA info

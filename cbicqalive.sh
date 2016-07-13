@@ -13,23 +13,13 @@
 # Copyright 2014-2016 California Institute of Technology
 # All rights reserved.
 
-if [ $# -lt 2 ]; then
-  echo "USAGE : cbicqalive <4D EPI Nifti-1>
+if [ $# -lt 1 ]; then
+  echo "USAGE : cbicqalive <4D EPI Nifti-1>"
   exit
 fi
 
 # 4D EPI filename (including .nii.gz extension)
 epi_file=$1
-
-
-# Splash
-echo "------------------------------------------"
-echo "QALive : in vivo quality assurance metrics"
-echo "------------------------------------------"
-echo "4D EPI Data : ${epi_file}"
-echo "EPI TR      : ${TR_seconds} seconds"
-echo "Start time  : `date`"
-echo ""
 
 # Check that EPI file exists
 if [ ! -s ${epi_file} ]; then
@@ -37,12 +27,17 @@ if [ ! -s ${epi_file} ]; then
   exit
 fi
 
-# Extract data dimensions from Nifti header
-
-
-
 # TR required for high pass filtering
-TR_seconds=$2
+TR_seconds=`fslinfo ${epi_file} | awk '{ if ( $1 == "pixdim4") print $2}'`
+
+# Splash
+echo "------------------------------------------"
+echo "QALive : in vivo quality assurance metrics"
+echo "------------------------------------------"
+echo "4D EPI Data : ${epi_file}"
+echo "TR (s)      : ${TR_seconds}"
+echo "Start time  : `date`"
+echo ""
 
 # Find containing directory
 root_dir=`dirname $epi_file`
@@ -68,6 +63,7 @@ qa_mask=${qa_dir}/qa_mask
 qa_brain_mask=${qa_dir}/qa_brain_mask
 qa_tsnr_median=${qa_dir}/qa_tsnr_median.txt
 qa_mcf_par=${qa_dir}/qa_mcf.par
+qa_mcf_mean=${qa_dir}/qa_mcf_mean.txt
 
 # Check whether MOCO has already been performed
 if [ -s ${qa_mcf}.nii.gz ] && [ -s ${qa_mcf_par} ]; then
@@ -89,7 +85,7 @@ if [ -s ${qa_filt}.nii.gz ]; then
 else
   sigma_seconds=50.0
   sigma_vols=`echo $TR_seconds | awk -v s=${sigma_seconds} '{ print s / $1 }'`
-  echo "Temporal high pass filtering : sigma = $sigma_seconds seconds (${sigma_vols} volumes)"
+  echo "Temporal high pass filtering : sigma = ${sigma_seconds} seconds, ${sigma_vols} volumes"
   fslmaths ${qa_mcf} -bptf ${sigma_vols} -1 ${qa_filt}
 fi
 
@@ -166,8 +162,6 @@ else
   # Determine y dimension (PE dim in EPI)
   half_ny=`fslinfo ${qa_tmean} | awk '{ if ($1 == "dim2") print $2/2 }'`
 
-  echo "Half ny = ${half_ny}"
-
   # Extract upper and lower halves of dilated volume mask in Y dimension (PE)
   fslroi ${tmp_signal_dil} ${tmp_lower} 0 -1 0 ${half_ny} 0 -1 0 -1
   fslroi ${tmp_signal_dil} ${tmp_upper} 0 -1 ${half_ny} -1 0 -1 0 -1
@@ -231,8 +225,16 @@ else
   fslstats ${qa_tsnr} -k ${qa_brain_mask} -p 50 > ${qa_tsnr_median}
 fi
 
+# Calculate mean frame-to-frame rotation (mdeg) and displacement (microns)
+if [ -s ${qa_mcf_mean} ]; then
+  echo "  Mean F-F rotation and displacement already calculated"
+else
+  echo "  Calculating mean F-F rotation and displacement"
+  motion_stats.py -i ${qa_mcf_par} > ${qa_mcf_mean}
+fi
+
 # Generate HTML report page and convert to PDF
-cbicqalive_report.sh
+# cbicqalive_report.py -i ${qa_dir}
 
 # Done
 echo "Finished at : `date`"
