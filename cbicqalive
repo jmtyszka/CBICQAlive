@@ -35,10 +35,10 @@ do
 	fi
 
 	# TR required for high pass filtering
-	TR_seconds=`fslinfo ${epi_file} | awk '{ if ( $1 == "pixdim4") print $2}'`
+	TR_secs=`fslinfo ${epi_file} | awk '{ if ( $1 == "pixdim4") print $2}'`
 
 	# Number of volumes in timeseries
-	N_volumes=`fslinfo ${epi_file} | awk '{ if ($1 == "dim4") print $2 }'`
+	N_vols=`fslinfo ${epi_file} | awk '{ if ($1 == "dim4") print $2 }'`
 
 	# Splash
 	echo ""
@@ -46,8 +46,8 @@ do
 	echo "QALive : in vivo quality assurance metrics"
 	echo "------------------------------------------"
 	echo "4D EPI Data : ${epi_file}"
-	echo "TR (s)      : ${TR_seconds}"
-	echo "Num Vols    : ${N_volumes}"
+	echo "TR (s)      : ${TR_secs}"
+	echo "Num Vols    : ${N_vols}"
 	echo ""
 
 	# Find containing directory
@@ -70,13 +70,14 @@ do
 	qa_filt=${qa_dir}/qa_filt
 	qa_tmean=${qa_dir}/qa_tmean
 	qa_tsd=${qa_dir}/qa_tsd
-	qa_tsnr=${qa_dir}/qa_tsnr
+	qa_tsnfr=${qa_dir}/qa_tsnfr
 	qa_mask=${qa_dir}/qa_mask
 	qa_brain_mask=${qa_dir}/qa_brain_mask
-	qa_tsnr_median=${qa_dir}/qa_tsnr_median.txt
+	qa_tsnr_mean=${qa_dir}/qa_tsnr_mean.txt
 	qa_mcf_par=${qa_dir}/qa_mcf.par
 	qa_mcf_mean=${qa_dir}/qa_mcf_mean.txt
-	qa_dvars=${qa_dir}/qa_dvars.txt
+	qa_dvars_ts=${qa_dir}/qa_dvars_ts.txt
+	qa_roi_ts=${qa_dir}/qa_roi_ts.txt
 
 	# Check whether MOCO has already been performed
 	if [ -s ${qa_mcf}.nii.gz ] && [ -s ${qa_mcf_par} ]; then
@@ -92,18 +93,15 @@ do
 	#
 	# Non-linear high pass filtering to remove slow baselines
 	# Standard step in FEAT pipeline
-	#
-	if [ -s ${qa_filt}.nii.gz ]; then
-		echo "Temporal high pass filtering has already been done - skipping"
-	else
-		sigma_seconds=50.0
-		sigma_vols=`echo $TR_seconds | awk -v s=${sigma_seconds} '{ print s / $1 }'`
-		echo "Temporal high pass filtering : sigma = ${sigma_seconds} seconds, ${sigma_vols} volumes"
-		fslmaths ${qa_mcf} -bptf ${sigma_vols} -1 ${qa_filt}
-	fi
 
-	# Timeseries text file
-	qa_timeseries=${qa_dir}/qa_timeseries.txt
+    if [ -s ${qa_filt}.nii.gz ]; then
+        echo "Temporal high pass filtering has already been done - skipping"
+    else
+        sigma_seconds=50.0
+        sigma_vols=`echo $TR_seconds | awk -v s=${sigma_seconds} '{ print s / $1 }'`
+        echo "Temporal high pass filtering : sigma = ${sigma_seconds} seconds, ${sigma_vols} volumes"
+        fslmaths ${qa_mcf} -bptf ${sigma_vols} -1 ${qa_filt}
+    fi
 
 	#
 	# Temporal summary images
@@ -113,7 +111,7 @@ do
 	then
 		echo "  Mean image exists - skipping"
 	else
-		echo "  Calculating tMean image from unfiltered data"
+		echo "  Calculating tMean image from motion corrected data"
 		fslmaths ${qa_mcf} -Tmean ${qa_tmean}
 	fi
 
@@ -122,22 +120,21 @@ do
 	then
 		echo "  SD image exists - skipping"
 	else
-		echo "  Calculating tSD image from filtered data"
-		fslmaths ${qa_filt} -Tstd ${qa_tsd}
+		echo "  Calculating temporal fluctuation noise SD"
+		fslmaths ${qa_mcf} -Tstd ${qa_tsd}
 	fi
 
-	# Voxel-wise tSNR image
-	if [ -s ${qa_tsnr}.nii.gz ]
+	# Voxel-wise tSNFR image
+	if [ -s ${qa_tsnfr}.nii.gz ]
 	then
-		echo "  tSNR image exists - skipping"
+		echo "  tSNFR image exists - skipping"
 	else
-		echo "  Estimating tSNR image (tMean / tSD)"
-		fslmaths ${qa_tmean} -div ${qa_tsd} ${qa_tsnr}
+		echo "  Estimating tSNFR image (tMean / tSD)"
+		fslmaths ${qa_tmean} -div ${qa_tsd} ${qa_tsnfr}
 	fi
-
 
 	#
-	# Regional mask creation
+	# Regional mask creation from temporal mean image
 	#
 
 	if [ -s ${qa_mask}.nii.gz ]
@@ -149,10 +146,11 @@ do
 		tmp_signal=${qa_dir}/tmp_signal
 		tmp_signal_dil=${qa_dir}/tmp_signal_dil
 		tmp_brain=${qa_dir}/tmp_brain
+		tmp_brain_mask=${tmp_brain}_mask
 		tmp_nyquist=${qa_dir}/tmp_nyquist
 		tmp_upper=${qa_dir}/tmp_upper
 		tmp_lower=${qa_dir}/tmp_lower
-		tmp_noise=${qa_dir}/tmp_noise
+		tmp_air=${qa_dir}/tmp_air
 
 		# Signal threshold for basic segmentation
 		# 10% of the 99th percentile of intensity
@@ -161,17 +159,16 @@ do
 		# Signal mask
 		echo "  Creating signal mask (threshold = ${signal_threshold})"
 		fslmaths ${qa_tmean} -thr ${signal_threshold} -bin ${tmp_signal}
-		
-		# Erode signal mask (6 mm radius sphere) to create brain mask
-		echo "  Creating brain mask"
-		fslmaths ${tmp_signal} -kernel sphere 6.0 -ero ${tmp_brain}
 
-		# Dilate brain mask (6 mm radius sphere) *twice* to create dilated signal mask
-		echo "  Creating dilated signal mask"
-		fslmaths ${tmp_brain} -kernel sphere 6.0 -dilF -dilF ${tmp_signal_dil}
+		# Brain mask (use FSL BET)
+		echo "  Creating brain mask"
+		bet ${qa_tmean} ${tmp_brain} -m -R
+
+		# Erode signal mask once, then dilate twice
+		echo "  Open and dilate signal mask (5 mm radius kernel)"
+		fslmaths ${tmp_signal} -kernel sphere 5.0 -ero -dilF -dilF ${tmp_signal_dil}
 
 		echo "  Creating Nyquist mask"
-
 		# Determine y dimension (PE dim in EPI)
 		half_ny=`fslinfo ${qa_tmean} | awk '{ if ($1 == "dim2") print $2/2 }'`
 
@@ -189,20 +186,20 @@ do
 		# XOR Nyquist and dilated signal masks
 		fslmaths ${tmp_nyquist} -mul ${tmp_signal_dil} -mul -1.0 -add ${tmp_nyquist} ${tmp_nyquist}
 		
-		echo "  Creating noise mask"
-		# Create noise mask by subtracting Nyquist mask from NOT dilated signal mask
-		fslmaths ${tmp_signal_dil} -binv -sub ${tmp_nyquist} ${tmp_noise}
+		echo "  Creating air mask"
+		# Create air mask by subtracting Nyquist mask from NOT dilated signal mask
+		fslmaths ${tmp_signal_dil} -binv -sub ${tmp_nyquist} ${tmp_air}
 		
 		# Finally merge all three masks into an indexed file
 		# Phantom = 1
 		# Nyquist = 2
-		# Noise   = 3
+		# Air     = 3
 		fslmaths ${tmp_nyquist} -mul 2 ${tmp_nyquist}
-		fslmaths ${tmp_noise} -mul 3 ${tmp_noise}
-		fslmaths ${tmp_brain} -add ${tmp_nyquist} -add ${tmp_noise} ${qa_mask}
+		fslmaths ${tmp_air} -mul 3 ${tmp_air}
+		fslmaths ${tmp_brain_mask} -add ${tmp_nyquist} -add ${tmp_air} ${qa_mask}
 
 		# Save brain mask
-		imcp ${tmp_brain} ${qa_brain_mask}
+		imcp ${tmp_brain_mask} ${qa_brain_mask}
 
 		# Clean up temporary images
 		echo "  Cleaning up temporary images"
@@ -211,31 +208,36 @@ do
 	fi
 
 	# Create orthogonal slice views temporal summary images and masks
-	scale_factor=2
+	scale_factor=2.5
 	slicer ${qa_tmean} -s ${scale_factor} -a ${qa_dir}/qa_tmean_ortho.png
 	slicer ${qa_tsd} -s ${scale_factor} -a ${qa_dir}/qa_tsd_ortho.png
-	slicer ${qa_tsnr} -s ${scale_factor} -a ${qa_dir}/qa_tsnr_ortho.png
+	slicer ${qa_tsnfr} -s ${scale_factor} -a ${qa_dir}/qa_tsnfr_ortho.png
 	slicer ${qa_mask} -s ${scale_factor} -a ${qa_dir}/qa_mask_ortho.png
 
 	# DVARS timecourse
-	if [ -s ${qa_dvars} ]; then
+	if [ -s ${qa_dvars_ts} ]; then
 		echo "  DVARS timecourse exists - skipping"
 	else
-		echo "  Calculating DVARS timecourse within brain mask for unfiltered data"
-		fsl_motion_outliers -i ${qa_mcf} -m ${qa_brain_mask} -o ${qa_dir}/motion_outliers.txt -s ${qa_dvars} --dvars --nomoco
+		echo "  Calculating DVARS timecourse within brain mask for motion corrected data"
+		fsl_motion_outliers -i ${qa_mcf} -m ${qa_brain_mask} -o /dev/null -s ${qa_dvars_ts} --dvars --nomoco
 	fi
 
 	# Extract time-series stats within each ROI
-	if [ -s ${qa_timeseries} ]; then
+	if [ -s ${qa_roi_ts} ]; then
 		echo "  Signal timecourses exist - skipping"
 	else
 		echo "  Extracting mean signal timecourses for each region"
 		# Timecourse of mean signal within each mask label
-		fslmeants -i ${qa_filt} -o ${qa_timeseries} --label=${qa_mask}
+		fslmeants -i ${qa_mcf} -o ${qa_roi_ts} --label=${qa_mask}
 	fi
 
+    # Write dataset info to QA directory
+    echo "  Saving dataset information"
+    echo "TR_secs, ${TR_secs}" > ${qa_info}
+    echo "N_vols, ${N_vols}" >> ${qa_info}
+
 	# Generate summary statistics and plots in QA directory
-	# cbicqalive_stats.py -i ${qa_dir}
+	cbicqalive_stats.py -i ${qa_dir}
 
 	# Generate HTML report page (index.html) in QA directory
 	cbicqalive_report.py -i ${qa_dir}
