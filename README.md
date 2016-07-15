@@ -11,7 +11,7 @@ Clone the repository into a suitable location (eg /usr/local) and add this direc
 
 ## Usage
 
-cbicqalive <summary statistics file prefix> <list of 4D EPI compressed Nifti images>
+cbicqalive \<summary statistics file prefix\> \<list of 4D EPI compressed Nifti images\>
 
 ## Example
 
