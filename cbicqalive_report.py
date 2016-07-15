@@ -74,65 +74,60 @@ td, th {
 </table>
 
 <h3> Summary Statistics </h3>
+<h4> Mean tSFNR within Brain : $tSFNR_brain </h4>
 <table>
     <tr>
         <td> <b> Parameter </b> </td>
-        <td> <b> Mean </b> </td>
+        <td> <b> tMean </b> </td>
         <td> <b> Threshold </b> </td>
-        <td> <b> Outliers </b> </td>
+        <td> <b> Outliers (Fraction)</b> </td>
         <td> </td>
     </tr>
     <tr>
         <td> sMean Brain Signal </td>
         <td> $brain_tmean </td>
         <td> $brain_thresh </td>
-        <td> $brain_nout </td>
-        <td> $brain_pout% </td>
+        <td> $brain_nout ($brain_pout%) </td>
     </tr>
     <tr>
         <td> sMean Nyquist Ghost Signal</td>
         <td> $ghost_tmean </td>
         <td> $ghost_thresh </td>
-        <td> $ghost_nout </td>
-        <td> $ghost_pout% </td>
+        <td> $ghost_nout ($ghost_pout%) </td>
     </tr>
     <tr>
         <td> sMean Air Signal</td>
         <td> $air_tmean </td>
         <td> $air_thresh </td>
-        <td> $air_nout </td>
-        <td> $air_pout% </td>
+        <td> $air_nout ($air_pout%) </td>
     </tr>
     <tr>
         <td> DVARS</td>
         <td> $dvars_tmean </td>
         <td> $dvars_thresh </td>
-        <td> $dvars_nout </td>
-        <td> $dvars_pout% </td>
+        <td> $dvars_nout ($dvars_pout%) </td>
     </tr>
     <tr>
         <td> F-F Displacement (microns)</td>
         <td> $dd_um_tmean </td>
         <td> $dd_um_thresh </td>
-        <td> $dd_um_nout </td>
-        <td> $dd_um_pout% </td>
+        <td> $dd_um_nout ($dd_um_pout%) </td>
     </tr>
     <tr>
         <td> F-F Rotation (mdeg)</td>
         <td> $dr_mdeg_tmean </td>
         <td> $dr_mdeg_thresh </td>
-        <td> $dr_mdeg_nout </td>
-        <td> $dr_mdeg_pout% </td>
+        <td> $dr_mdeg_nout ($dr_mdeg_pout%) </td>
     </tr>
 </table>
 
 <h3> Temporal Summary Images </h3>
 <table>
     <tr>
-        <td> <b>SNFR</b><br> <img src=qa_tsnfr_ortho.png /> </td>
+        <td> <b>Temporal Signal-to-Fluctuation-Noise Ratio (SFNR)</b><br> <img src=qa_tsfnr_ortho.png /> </td>
     </tr>
     <tr>
-        <td> <br><b>Mean Signal</b><br> <img src=qa_tmean_ortho.png /> </td>
+        <td> <br><b>Temporal Mean Signal</b><br> <img src=qa_tmean_ortho.png /> </td>
     </tr>
     </tr>
         <td> <br><b>Fluctuation Noise SD</b><br> <img src=qa_tsd_ortho.png /> </td>
@@ -194,6 +189,13 @@ def main():
 
     stats = np.genfromtxt(stats_csv_fname, delimiter=',', usecols=(1,2,3,4))
 
+    # Load sMean tSFNR results from file
+    sfnr_fname = os.path.join(qa_dir, 'qa_tsfnr_brain.txt')
+    if not os.path.isfile(sfnr_fname):
+        print(sfnr_fname + ' does not exist - exiting')
+        sys.exit(0)
+    tSFNR_brain = np.genfromtxt(sfnr_fname)
+
     #
     # HTML report generation
     #
@@ -203,6 +205,7 @@ def main():
         ('qa_dir_abs',     "%s"    % qa_dir_abs),
         ('TR_secs',        "%0.3f" % TR_secs),
         ('N_vols',         "%d"    % N_vols),
+        ('tSFNR_brain',    "%0.1f" % tSFNR_brain),
         ('brain_tmean',    "%0.1f" % stats[0, 0]),
         ('brain_thresh',   "%0.1f" % stats[0, 1]),
         ('brain_nout',     "%d"    % stats[0, 2]),
@@ -234,8 +237,9 @@ def main():
     html_data = TEMPLATE.safe_substitute(qa_dict)
     
     # Write HTML report page
-    qa_report_file = os.path.join(qa_dir, 'index.html')
-    open(qa_report_file, "w").write(html_data)
+    qa_report_html = os.path.join(qa_dir, 'index.html')
+    open(qa_report_html, "w").write(html_data)
+
 
 # This is the standard boilerplate that calls the main() function.
 if __name__ == '__main__':

@@ -146,18 +146,22 @@ def main():
 
     subplot(411)
     plot(v, brain_t)
-    title("Mean Brain Signal", x=0.5, y=0.8)
+    axhline(y=brain_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
+    title("sMean Brain Signal", x=0.5, y=0.8)
     
     subplot(412)
     plot(v, ghost_t)
-    title("Mean Ghost Signal", x=0.5, y=0.8)
+    axhline(y=ghost_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
+    title("sMean Ghost Signal", x=0.5, y=0.8)
     
     subplot(413)
     plot(v, air_t)
-    title("Mean Air Signal", x=0.5, y=0.8)
+    axhline(y=air_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
+    title("sMean Air Signal", x=0.5, y=0.8)
 
     subplot(414)
     plot(v, dvars_t)
+    axhline(y=dvars_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
     title("DVARS", x=0.5, y=0.8)
 
     savefig(os.path.join(qa_dir, 'qa_roi_timeseries.png'), dpi=72, bbox_inches='tight')
@@ -176,10 +180,12 @@ def main():
 
     subplot(413)
     plot(v, dd_um)
+    axhline(y=dd_um_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
     title("Total F-F Displacement (microns)", x=0.5, y=0.8)
 
     subplot(414)
     plot(v, dr_mdeg)
+    axhline(y=dr_mdeg_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
     title("Total F-F Rotation (mdeg)", x=0.5, y=0.8)
 
     savefig(os.path.join(qa_dir, 'qa_motion_timeseries.png'), dpi=72, bbox_inches='tight')
@@ -256,20 +262,20 @@ def timeseries_stats(s):
     Identify upper outliers in timeseries using UQ + 1.5 * IQR
     :param s: numpy vector of real values
     :return: tmean, thresh, nout, iout
-        tmean = temporal mean of vector
+        tmean = timeseries mean
         thresh = outlier threshold
         nout = number of outlier values
         iout = indices of outliers in timeseries
     """
 
-    # Temporal mean of vector
+    # Mean of timeseries
     tmean = s.mean()
 
-    # Find LQ and UQ of values
+    # Find LQ and UQ of timeseries
     lq, uq = np.percentile(s, (25, 75))
 
-    # Outlier threshold = UQ + 1.5 (UQ - LQ) = 2.5 UQ - LQ
-    thresh = 2.5 * uq - lq
+    # Outlier threshold = UQ + 1.5 (UQ - LQ)
+    thresh = uq + 1.5 * (uq - lq)
 
     # Find indices of outliers in vector
     iout = np.array(np.where(s > thresh))
