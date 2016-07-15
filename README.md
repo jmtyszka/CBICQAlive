@@ -1,6 +1,8 @@
 # CBICQAlive
 MRI QA script for in vivo EPI data
 
+Full documentation for the methods used and for interpretation of the QA report can be found in the Wiki for this repository.
+
 ## Dependencies:
 * Python 3.4
 * FSL 5x
