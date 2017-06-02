@@ -30,12 +30,12 @@ out_fname=${out_prefix}.csv
 
 # Write column headers to stats summary file
 echo -n "Filename, TR_secs, N_vols, tSFNR_brain, " > $out_fname
-echo -n "Brain_tMean, Brain_Thresh, Brain_Out, " >> $out_fname
-echo -n "Ghost_tMean, Ghost_Thresh, Ghost_Out, " >> $out_fname
-echo -n "Air_tMean, Air_Thresh, Air_Out, " >> $out_fname
-echo -n "DVARS_tMean, DVARS_Thresh, DVARS_Out, " >> $out_fname
-echo -n "FFDisp_um_tMean, FFDisp_um_Thresh, FFDisp_um_Out, " >> $out_fname
-echo "FFRot_mdeg_tMean, FFRot_mdeg_Thresh, FFRot_mdeg_Out" >> $out_fname
+echo -n "Brain_tMean, Brain_Thresh, Brain_PercOut, " >> $out_fname
+echo -n "Ghost_tMean, Ghost_Thresh, Ghost_PercOut, " >> $out_fname
+echo -n "Air_tMean, Air_Thresh, Air_PercOut, " >> $out_fname
+echo -n "DVARS_tMean, DVARS_Thresh, DVARS_PercOut, " >> $out_fname
+echo -n "FFDisp_um_tMean, FFDisp_um_Thresh, FFDisp_um_PercOut, " >> $out_fname
+echo "FFRot_mdeg_tMean, FFRot_mdeg_Thresh, FFRot_mdeg_PercOut" >> $out_fname
 
 # Loop over remaining file list
 for epi_file in $*
@@ -263,8 +263,9 @@ do
 	epi_file_abs="$(cd "$(dirname "$epi_file")"; pwd)/$(basename "$epi_file")"
 
 	# Construct summary stats row
+	# Use percentage of outliers (column 5), not simple outlier count (column 4)
 	pre_str="$epi_file_abs, $TR_secs, $N_vols, $tSFNR_brain"
-	stats_str=`awk '{ printf ", %g, %g, %g", $2, $3, $4 }' $qa_stats`
+	stats_str=`awk '{ printf ", %g, %g, %g", $2, $3, $5 }' $qa_stats`
 
 	echo "${pre_str}${stats_str}" >> $out_fname
 
