@@ -35,7 +35,8 @@ fi
 
 # Create a QCLive directory at the same level
 # Leave deletion of files to user since this script reuses previous results where possible
-qc_dir=${out_dir}/${epi_file%%.nii.gz}.qclive
+qc_base=`basename ${epi_file%%.nii.gz}`.qclive
+qc_dir=${out_dir}/${qc_base}
 if [ ! -d ${qc_dir} ]; then
     mkdir -p ${qc_dir}
 fi
@@ -58,7 +59,7 @@ echo "Num Vols    : ${N_vols}"
 echo ""
 
 # Key filenames
-qc_info=${qc_dir}/qc_info.txt
+qc_info=${qc_dir}/qc_info.csv
 qc_mcf=${qc_dir}/qc_mcf
 qc_filt=${qc_dir}/qc_filt
 qc_tmean=${qc_dir}/qc_tmean
@@ -228,16 +229,17 @@ else
     fslmeants -i ${qc_mcf} -o ${qc_roi_ts} --label=${qc_mask}
 fi
 
-# Write dataset info to QC directory
-echo "  Saving dataset information"
-echo "TR_secs, ${TR_secs}" > ${qc_info}
-echo "N_vols, ${N_vols}" >> ${qc_info}
-
 # Generate summary statistics and plots in QC directory
 cbicqclive_stats.py -i ${qc_dir}
 
 # Generate HTML report page (index.html) in QC directory
 cbicqclive_report.py -i ${qc_dir}
+
+# Write summary info to CSV file
+echo "  Saving QC summary info"
+pre_str="$qc_dir, $TR_secs, $N_vols, $tSFNR_brain"
+stats_str=`awk '{ printf ", %g, %g, %g", $2, $3, $5 }' $qc_stats`
+echo "${pre_str}${stats_str}" > ${qc_info}
 
 # Done
 echo "Finished at : `date`"
