@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="8302a1a1-47eb-4f48-b5ad-ec887476a4d2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cbicqclive_batch" afterPath="$PROJECT_DIR$/cbicqclive_batch" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cbicqclive_report.py" afterPath="$PROJECT_DIR$/cbicqclive_report.py" />
     </list>
     <ignored path="CBICQAlive.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -66,21 +66,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cbicqclive_batch" pinned="false" current-in-tab="true">
+      <file leaf-file-name="cbicqclive_batch" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cbicqclive_batch">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="430">
-              <caret line="36" column="48" lean-forward="true" selection-start-line="36" selection-start-column="48" selection-end-line="36" selection-end-column="48" />
+            <state relative-caret-position="990">
+              <caret line="66" column="12" lean-forward="true" selection-start-line="66" selection-start-column="12" selection-end-line="66" selection-end-column="12" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cbicqclive_report.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="cbicqclive_report.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cbicqclive_report.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="100" column="21" lean-forward="true" selection-start-line="100" selection-start-column="21" selection-end-line="100" selection-end-column="21" />
+            <state relative-caret-position="740">
+              <caret line="186" column="47" lean-forward="true" selection-start-line="186" selection-start-column="47" selection-end-line="186" selection-end-column="47" />
               <folding>
                 <element signature="e#1036#1045#0" expanded="true" />
               </folding>
@@ -150,10 +150,10 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/cbicqclive_stats.py" />
         <option value="$PROJECT_DIR$/cbicqclive" />
-        <option value="$PROJECT_DIR$/cbicqclive_report.py" />
-        <option value="$PROJECT_DIR$/cbicqclive_report.py" />
         <option value="$PROJECT_DIR$/cbicqclive_batch" />
         <option value="$PROJECT_DIR$/cbicqclive_batch" />
+        <option value="$PROJECT_DIR$/cbicqclive_report.py" />
+        <option value="$PROJECT_DIR$/cbicqclive_report.py" />
       </list>
     </option>
   </component>
@@ -165,7 +165,7 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="973" />
-    <option name="y" value="105" />
+    <option name="y" value="265" />
     <option name="width" value="1587" />
     <option name="height" value="1109" />
   </component>
@@ -661,11 +661,18 @@
       <option name="project" value="LOCAL" />
       <updated>1501606597445</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Tidy up SGE logging">
+      <created>1501606757594</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1501606757594</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="973" y="105" width="1587" height="1109" extended-state="0" />
+    <frame x="973" y="265" width="1587" height="1109" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24385633" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1101,21 +1108,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cbicqclive_report.py">
+    <entry file="file://$PROJECT_DIR$/cbicqclive_batch">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="100" column="21" lean-forward="true" selection-start-line="100" selection-start-column="21" selection-end-line="100" selection-end-column="21" />
-          <folding>
-            <element signature="e#1036#1045#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="990">
+          <caret line="66" column="12" lean-forward="true" selection-start-line="66" selection-start-column="12" selection-end-line="66" selection-end-column="12" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cbicqclive_batch">
+    <entry file="file://$PROJECT_DIR$/cbicqclive_report.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="430">
-          <caret line="36" column="48" lean-forward="true" selection-start-line="36" selection-start-column="48" selection-end-line="36" selection-end-column="48" />
-          <folding />
+        <state relative-caret-position="740">
+          <caret line="186" column="47" lean-forward="true" selection-start-line="186" selection-start-column="47" selection-end-line="186" selection-end-column="47" />
+          <folding>
+            <element signature="e#1036#1045#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

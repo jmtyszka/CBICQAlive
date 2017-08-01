@@ -170,32 +170,32 @@ def main():
 
     # Load dataset info and stats from QC directory
     info_fname = os.path.join(qc_dir, 'qc_info.csv')
-    info = genfromtxt(info_fname, delimiter=',', dtype=None)
+    info = genfromtxt(info_fname, delimiter=',')
 
     # Create substitution dictionary for HTML report
     qc_dict = dict([
         ('qc_dir_abs',     "%s"    % qc_dir_abs),
-        ('TR_secs',        "%0.3f" % info[0, 1]),
-        ('N_vols',         "%d"    % info[0, 2]),
-        ('tSFNR_brain',    "%0.1f" % info[0, 3]),
-        ('brain_tmean',    "%0.1f" % info[0, 4]),
-        ('brain_thresh',   "%0.1f" % info[0, 5]),
-        ('brain_pout',     "%0.1f" % info[0, 6]),
-        ('ghost_tmean',    "%0.1f" % info[0, 7]),
-        ('ghost_thresh',   "%0.1f" % info[0, 8]),
-        ('ghost_pout',     "%0.1f" % info[0, 9]),
-        ('air_tmean',      "%0.1f" % info[0, 10]),
-        ('air_thresh',     "%0.1f" % info[0, 11]),
-        ('air_pout',       "%0.1f" % info[0, 12]),
-        ('dvars_tmean',    "%0.1f" % info[0, 13]),
-        ('dvars_thresh',   "%0.1f" % info[0, 14]),
-        ('dvars_pout',     "%0.1f" % info[0, 15]),
-        ('dd_um_tmean',    "%0.1f" % info[0, 16]),
-        ('dd_um_thresh',   "%0.1f" % info[0, 17]),
-        ('dd_um_pout',     "%0.1f" % info[0, 18]),
-        ('dr_mdeg_tmean',  "%0.1f" % info[0, 19]),
-        ('dr_mdeg_thresh', "%0.1f" % info[0, 20]),
-        ('dr_mdeg_pout',   "%0.1f" % info[0, 21]),
+        ('TR_secs',        "%0.3f" % info[1]),
+        ('N_vols',         "%d"    % info[2]),
+        ('tSFNR_brain',    "%0.1f" % info[3]),
+        ('brain_tmean',    "%0.1f" % info[4]),
+        ('brain_thresh',   "%0.1f" % info[5]),
+        ('brain_pout',     "%0.1f" % info[6]),
+        ('ghost_tmean',    "%0.1f" % info[7]),
+        ('ghost_thresh',   "%0.1f" % info[8]),
+        ('ghost_pout',     "%0.1f" % info[9]),
+        ('air_tmean',      "%0.1f" % info[10]),
+        ('air_thresh',     "%0.1f" % info[11]),
+        ('air_pout',       "%0.1f" % info[12]),
+        ('dvars_tmean',    "%0.1f" % info[13]),
+        ('dvars_thresh',   "%0.1f" % info[14]),
+        ('dvars_pout',     "%0.1f" % info[15]),
+        ('dd_um_tmean',    "%0.1f" % info[16]),
+        ('dd_um_thresh',   "%0.1f" % info[17]),
+        ('dd_um_pout',     "%0.1f" % info[18]),
+        ('dr_mdeg_tmean',  "%0.1f" % info[19]),
+        ('dr_mdeg_thresh', "%0.1f" % info[20]),
+        ('dr_mdeg_pout',   "%0.1f" % info[21]),
     ])
 
     # Generate HTML report from template (see above)
