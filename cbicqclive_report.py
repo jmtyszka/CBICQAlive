@@ -84,48 +84,41 @@ td, th {
             <td> <b> Parameter </b> 
             <td> <b> tMean </b> 
             <td> <b> Threshold </b> 
-            <td> <b> Outliers</b> 
-            <td> <b> Outlier Fraction 
+            <td> <b> Percent Outliers 
         </tr>
             <td> Brain  
             <td> $brain_tmean 
             <td> $brain_thresh 
-            <td> $brain_nout 
             <td> $brain_pout%  
         </tr>
         <tr>
             <td> Nyquist Ghost  
             <td> $ghost_tmean 
             <td> $ghost_thresh 
-            <td> $ghost_nout 
             <td> $ghost_pout% 
         </tr>
         <tr>
             <td> Air 
             <td> $air_tmean 
             <td> $air_thresh 
-            <td> $air_nout 
             <td> $air_pout% 
         </tr>
         <tr>
             <td> DVARS
             <td> $dvars_tmean 
             <td> $dvars_thresh 
-            <td> $dvars_nout 
             <td> $dvars_pout% 
         </tr>
         <tr>
             <td> F-F Displacement (microns)
             <td> $dd_um_tmean 
             <td> $dd_um_thresh 
-            <td> $dd_um_nout 
             <td> $dd_um_pout% 
         </tr>
         <tr>
             <td> F-F Rotation (mdeg)
             <td> $dr_mdeg_tmean 
             <td> $dr_mdeg_thresh 
-            <td> $dr_mdeg_nout 
             <td> $dr_mdeg_pout% 
         </tr>
     </table>
@@ -175,65 +168,34 @@ def main():
     # Determine full path for QC directory
     qc_dir_abs = os.path.abspath(qc_dir)
 
-    # Load dataset info from QC directory
+    # Load dataset info and stats from QC directory
     info_fname = os.path.join(qc_dir, 'qc_info.csv')
-    if not os.path.isfile(info_fname):
-        print(info_fname + ' does not exist - exiting')
-        sys.exit(0)
-
-    info = np.genfromtxt(info_fname, delimiter=',')
-    TR_secs = info[0,1]
-    N_vols = info[1,1]
-
-    # Load summary statistics from CSV file in QC directory
-    stats_csv_fname = os.path.join(qc_dir, 'qc_stats.csv')
-    if not os.path.isfile(stats_csv_fname):
-        print(stats_csv_fname + ' does not exist - exiting')
-        sys.exit(0)
-
-    stats = np.genfromtxt(stats_csv_fname, delimiter=',', usecols=(1,2,3,4))
-
-    # Load sMean tSFNR results from file
-    sfnr_fname = os.path.join(qc_dir, 'qc_tsfnr_brain.txt')
-    if not os.path.isfile(sfnr_fname):
-        print(sfnr_fname + ' does not exist - exiting')
-        sys.exit(0)
-    tSFNR_brain = np.genfromtxt(sfnr_fname)
-
-    #
-    # HTML report generation
-    #
+    info = genfromtxt(info_fname, delimiter=',', dtype=None)
 
     # Create substitution dictionary for HTML report
     qc_dict = dict([
         ('qc_dir_abs',     "%s"    % qc_dir_abs),
-        ('TR_secs',        "%0.3f" % TR_secs),
-        ('N_vols',         "%d"    % N_vols),
-        ('tSFNR_brain',    "%0.1f" % tSFNR_brain),
-        ('brain_tmean',    "%0.1f" % stats[0, 0]),
-        ('brain_thresh',   "%0.1f" % stats[0, 1]),
-        ('brain_nout',     "%d"    % stats[0, 2]),
-        ('brain_pout',     "%0.1f" % stats[0, 3]),
-        ('ghost_tmean',    "%0.1f" % stats[1, 0]),
-        ('ghost_thresh',   "%0.1f" % stats[1, 1]),
-        ('ghost_nout',     "%d"    % stats[1, 2]),
-        ('ghost_pout',     "%0.1f" % stats[1, 3]),
-        ('air_tmean',      "%0.1f" % stats[2, 0]),
-        ('air_thresh',     "%0.1f" % stats[2, 1]),
-        ('air_nout',       "%d"    % stats[2, 2]),
-        ('air_pout',       "%0.1f" % stats[2, 3]),
-        ('dvars_tmean',    "%0.1f" % stats[3, 0]),
-        ('dvars_thresh',   "%0.1f" % stats[3, 1]),
-        ('dvars_nout',     "%d"    % stats[3, 2]),
-        ('dvars_pout',     "%0.1f" % stats[3, 3]),
-        ('dd_um_tmean',    "%0.1f" % stats[4, 0]),
-        ('dd_um_thresh',   "%0.1f" % stats[4, 1]),
-        ('dd_um_nout',     "%d"    % stats[4, 2]),
-        ('dd_um_pout',     "%0.1f" % stats[4, 3]),
-        ('dr_mdeg_tmean',  "%0.1f" % stats[5, 0]),
-        ('dr_mdeg_thresh', "%0.1f" % stats[5, 1]),
-        ('dr_mdeg_nout',   "%d"    % stats[5, 2]),
-        ('dr_mdeg_pout',   "%0.1f" % stats[5, 3]),
+        ('TR_secs',        "%0.3f" % info[0, 1]),
+        ('N_vols',         "%d"    % info[0, 2]),
+        ('tSFNR_brain',    "%0.1f" % info[0, 3]),
+        ('brain_tmean',    "%0.1f" % info[0, 4]),
+        ('brain_thresh',   "%0.1f" % info[0, 5]),
+        ('brain_pout',     "%0.1f" % info[0, 6]),
+        ('ghost_tmean',    "%0.1f" % info[0, 7]),
+        ('ghost_thresh',   "%0.1f" % info[0, 8]),
+        ('ghost_pout',     "%0.1f" % info[0, 9]),
+        ('air_tmean',      "%0.1f" % info[0, 10]),
+        ('air_thresh',     "%0.1f" % info[0, 11]),
+        ('air_pout',       "%0.1f" % info[0, 12]),
+        ('dvars_tmean',    "%0.1f" % info[0, 13]),
+        ('dvars_thresh',   "%0.1f" % info[0, 14]),
+        ('dvars_pout',     "%0.1f" % info[0, 15]),
+        ('dd_um_tmean',    "%0.1f" % info[0, 16]),
+        ('dd_um_thresh',   "%0.1f" % info[0, 17]),
+        ('dd_um_pout',     "%0.1f" % info[0, 18]),
+        ('dr_mdeg_tmean',  "%0.1f" % info[0, 19]),
+        ('dr_mdeg_thresh', "%0.1f" % info[0, 20]),
+        ('dr_mdeg_pout',   "%0.1f" % info[0, 21]),
     ])
 
     # Generate HTML report from template (see above)

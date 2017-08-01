@@ -232,14 +232,14 @@ fi
 # Generate summary statistics and plots in QC directory
 cbicqclive_stats.py -i ${qc_dir}
 
-# Generate HTML report page (index.html) in QC directory
-cbicqclive_report.py -i ${qc_dir}
-
 # Write summary info to CSV file
-echo "  Saving QC summary info"
+echo "  Saving QC summary info to ${qc_info}"
 pre_str="$qc_dir, $TR_secs, $N_vols, $tSFNR_brain"
 stats_str=`awk '{ printf ", %g, %g, %g", $2, $3, $5 }' $qc_stats`
 echo "${pre_str}${stats_str}" > ${qc_info}
+
+# Generate HTML report page (index.html) in QC directory
+cbicqclive_report.py -i ${qc_dir}
 
 # Done
 echo "Finished at : `date`"
