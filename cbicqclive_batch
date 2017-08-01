@@ -23,18 +23,18 @@ if [ $# -lt 1 ]; then
 fi
 
 # Parse arguments
-bids_root_dir=$1
+bids_root=$1
 
 # Convert to absolute path
-bids_root_dir="$(cd "$(dirname "$bids_root_dir")"; pwd)"
+bids_root="$(cd "$(dirname "$bids_root")"; pwd)"
 
 # QC root directory
-qc_root_dir=${bids_root_dir}/derivatives/cbicqc
+qc_root_dir=${bids_root}/derivatives/cbicqc
 
 echo "QC root directory : ${qc_root_dir}"
 
-if [ ! -d ${bids_root_dir} ];then
-    echo "${bids_root_dir} does not exist - exiting"
+if [ ! -d ${bids_root} ];then
+    echo "${bids_root} does not exist - exiting"
     exit
 fi
 
@@ -42,12 +42,12 @@ fi
 queue=all.q
 
 # Remake a log directory
-log_dir=${bids_root_dir}/logs
-rm -rf log_dir
+log_dir=${bids_root}/logs
+rm -rf $log_dir
 mkdir -p ${log_dir}
 
 # Array and summary script names
-script_dir=${bids_root_dir}/scripts
+script_dir=${bids_root}/scripts
 if [ ! -d ${script_dir} ];then
     mkdir -p ${script_dir}
 fi
@@ -58,7 +58,7 @@ summary_sh=${script_dir}/cbicqclive_summary.sh
 rm -rf $array_sh
 
 # Loop over all functional EPI images within BIDS source directory
-for epi_file in ${bids_root_dir}/bids/sub*/ses*/func/*.nii.gz
+for epi_file in ${bids_root}/bids/sub*/ses*/func/*.nii.gz
 do
 
 	# Check that EPI file exists

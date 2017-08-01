@@ -69,8 +69,8 @@
       <file leaf-file-name="cbicqclive_batch" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cbicqclive_batch">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="542">
-              <caret line="43" column="24" lean-forward="true" selection-start-line="43" selection-start-column="24" selection-end-line="43" selection-end-column="24" />
+            <state relative-caret-position="430">
+              <caret line="36" column="48" lean-forward="true" selection-start-line="36" selection-start-column="48" selection-end-line="36" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -164,8 +164,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="999" />
-    <option name="y" value="84" />
+    <option name="x" value="973" />
+    <option name="y" value="105" />
     <option name="width" value="1587" />
     <option name="height" value="1109" />
   </component>
@@ -654,11 +654,18 @@
       <option name="project" value="LOCAL" />
       <updated>1501606375423</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Tidy up SGE logging">
+      <created>1501606597445</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1501606597445</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="999" y="84" width="1587" height="1109" extended-state="0" />
+    <frame x="973" y="105" width="1587" height="1109" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24385633" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -704,7 +711,8 @@
     <MESSAGE value="Corrected run condition for temporary scripts. Removed PDF report generation" />
     <MESSAGE value="Forced matplot to use Agg backend without X server. Fixed qc_info.csv loading for report." />
     <MESSAGE value="Fixed info parsing for HTML report. Now using summary info including stats in qc_info.csv" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed info parsing for HTML report. Now using summary info including stats in qc_info.csv" />
+    <MESSAGE value="Tidy up SGE logging" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tidy up SGE logging" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1105,8 +1113,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cbicqclive_batch">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="542">
-          <caret line="43" column="24" lean-forward="true" selection-start-line="43" selection-start-column="24" selection-end-line="43" selection-end-column="24" />
+        <state relative-caret-position="430">
+          <caret line="36" column="48" lean-forward="true" selection-start-line="36" selection-start-column="48" selection-end-line="36" selection-end-column="48" />
           <folding />
         </state>
       </provider>
