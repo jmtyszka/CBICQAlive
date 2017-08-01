@@ -69,8 +69,8 @@
       <file leaf-file-name="cbicqclive_batch" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cbicqclive_batch">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="875">
-              <caret line="90" column="10" lean-forward="false" selection-start-line="90" selection-start-column="10" selection-end-line="90" selection-end-column="10" />
+            <state relative-caret-position="845">
+              <caret line="88" column="86" lean-forward="false" selection-start-line="88" selection-start-column="86" selection-end-line="88" selection-end-column="86" />
               <folding />
             </state>
           </provider>
@@ -675,7 +675,14 @@
       <option name="project" value="LOCAL" />
       <updated>1501607200605</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Fixed correct escape of loop variable in summary script">
+      <created>1501608346252</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1501608346252</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -727,7 +734,8 @@
     <MESSAGE value="Fixed info parsing for HTML report. Now using summary info including stats in qc_info.csv" />
     <MESSAGE value="Tidy up SGE logging" />
     <MESSAGE value="Fixed qc_info loading (drop unnecessary dtype=None)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed qc_info loading (drop unnecessary dtype=None)" />
+    <MESSAGE value="Fixed correct escape of loop variable in summary script" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed correct escape of loop variable in summary script" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1128,8 +1136,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cbicqclive_batch">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="875">
-          <caret line="90" column="10" lean-forward="false" selection-start-line="90" selection-start-column="10" selection-end-line="90" selection-end-column="10" />
+        <state relative-caret-position="845">
+          <caret line="88" column="86" lean-forward="false" selection-start-line="88" selection-start-column="86" selection-end-line="88" selection-end-column="86" />
           <folding />
         </state>
       </provider>

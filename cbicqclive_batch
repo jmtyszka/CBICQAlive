@@ -86,10 +86,7 @@ echo -n "Air_tMean, Air_Thresh, Air_PercOut, " >> $summary_csv
 echo -n "DVARS_tMean, DVARS_Thresh, DVARS_PercOut, " >> $summary_csv
 echo -n "FFDisp_um_tMean, FFDisp_um_Thresh, FFDisp_um_PercOut, " >> $summary_csv
 echo "FFRot_mdeg_tMean, FFRot_mdeg_Thresh, FFRot_mdeg_PercOut" >> $summary_csv
-for qc_dir in ${qc_root_dir}/*.qclive
-do
->    cat \${qc_dir}/qc_info.csv >> $summary_csv
-done
+for qc_dir in ${qc_root_dir}/*.qclive; do cat \${qc_dir}/qc_info.csv >> $summary_csv; done
 EOL
 
 # Make summary script executable
