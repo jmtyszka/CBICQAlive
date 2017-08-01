@@ -37,16 +37,16 @@ if [ ! -d ${bids_root} ];then
     exit
 fi
 
-# Create temporary scripts
-tmp_tmp=`basename $0`
-tmp_array_sh=`mktemp -t ${tmp_tmp}`_array.sh || exit 1
-tmp_summary_sh=`mktemp -t ${tmp_tmp}`_summary.sh || exit 1
+# Array and summary script names
+script_dir=${bids_root}/scripts
+if [ ! -d ${script_dir} ];then
+    mkdir -p ${script_dir}
+fi
+array_sh=${script_dir}/cbicqclive_array.sh
+summary_sh=${script_dir}/cbicqclive_summary.sh
 
-echo "Temp array script   : ${tmp_array_sh}"
-echo "Temp summary script : ${tmp_summary_sh}"
-
-# Setup array script
-echo "#!/bin/bash" > $tmp_array_sh
+# Init array script
+rm -rf $array_sh
 
 # Loop over all functional EPI images within BIDS source directory
 for epi_file in ${bids_root}/bids/sub*/ses*/func/*.nii.gz
@@ -59,7 +59,7 @@ do
 	fi
 
 	# Echo command into batch script
-	echo "${HOME}/GitHub/CBICQClive/cbicqclive ${epi_file} ${qc_root_dir}" >> $tmp_array_sh
+	echo "${HOME}/GitHub/CBICQClive/cbicqclive ${epi_file} ${qc_root_dir}" >> $array_sh
 
 done # File list loop
 
@@ -69,12 +69,15 @@ if [ ! -d ${log_dir} ];then
     mkdir -p ${log_dir}
 fi
 
+# Default queue
+queue=all.q
+
 # Submit job array to SGE through FSL's qsub wrapper
-jid=`fsl_sub -l ${log_dir} -t $tmp_array_sh`
+jid=`fsl_sub -q ${queue} -l ${log_dir} -t $array_sh`
 
 # Construct a script to collect all the QC results into a summary CSV
 summary_csv=${qc_root_dir}/cbicqc_summary.csv
-cat > $tmp_summary_sh << EOL
+cat > $summary_sh << EOL
 #!/bin/bash
 echo -n "Filename, TR_secs, N_vols, tSFNR_brain, " > $summary_csv
 echo -n "Brain_tMean, Brain_Thresh, Brain_PercOut, " >> $summary_csv
@@ -90,7 +93,7 @@ done
 EOL
 
 # Make summary script executable
-chmod +x ${tmp_summary_sh}
+chmod +x ${summary_sh}
 
 # Submit summary job to SGE via FSL's qsub wrapper
-fsl_sub -j ${jid} -l ${log_dir} ${tmp_summary_sh}
+fsl_sub -q ${queue} -j ${jid} -l ${log_dir} ${summary_sh}

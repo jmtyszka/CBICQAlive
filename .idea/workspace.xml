@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8302a1a1-47eb-4f48-b5ad-ec887476a4d2" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/.idea/CBICQAlive.iml" afterPath="$PROJECT_DIR$/.idea/CBICQClive.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cbicqclive" afterPath="$PROJECT_DIR$/cbicqclive" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cbicqclive_batch" afterPath="$PROJECT_DIR$/cbicqclive_batch" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cbicqclive_report.py" afterPath="$PROJECT_DIR$/cbicqclive_report.py" />
     </list>
     <ignored path="CBICQAlive.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -74,8 +70,8 @@
       <file leaf-file-name="cbicqclive_batch" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cbicqclive_batch">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="896">
-              <caret line="92" column="26" lean-forward="false" selection-start-line="92" selection-start-column="26" selection-end-line="92" selection-end-column="26" />
+            <state relative-caret-position="772">
+              <caret line="76" column="0" lean-forward="true" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -618,7 +614,14 @@
       <option name="project" value="LOCAL" />
       <updated>1501539202732</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Add SGE batch job execution">
+      <created>1501543813207</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1501543813207</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -663,7 +666,8 @@
     <MESSAGE value="Separate stats functions into python. Add DVARS to main script." />
     <MESSAGE value="Add orthoslice movie generation (cbicqalive.py) for qualitative temporal noise assessments." />
     <MESSAGE value="Separate batch and individual scripts. Refactor quality assurance (QA) to quality control (QC) throughout, including project name" />
-    <option name="LAST_COMMIT_MESSAGE" value="Separate batch and individual scripts. Refactor quality assurance (QA) to quality control (QC) throughout, including project name" />
+    <MESSAGE value="Add SGE batch job execution" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add SGE batch job execution" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -687,7 +691,7 @@
         <state relative-caret-position="570">
           <caret line="42" column="37" lean-forward="true" selection-start-line="42" selection-start-column="37" selection-end-line="42" selection-end-column="37" />
           <folding>
-            <element signature="e#1037#1046#0" expanded="true" />
+            <element signature="e#1037#1046#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -723,7 +727,7 @@
         <state relative-caret-position="435">
           <caret line="33" column="19" lean-forward="false" selection-start-line="33" selection-start-column="19" selection-end-line="33" selection-end-column="19" />
           <folding>
-            <element signature="e#1037#1046#0" expanded="true" />
+            <element signature="e#1037#1046#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -759,7 +763,7 @@
         <state relative-caret-position="435">
           <caret line="33" column="19" lean-forward="false" selection-start-line="33" selection-start-column="19" selection-end-line="33" selection-end-column="19" />
           <folding>
-            <element signature="e#1037#1046#0" expanded="true" />
+            <element signature="e#1037#1046#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -795,7 +799,7 @@
         <state relative-caret-position="495">
           <caret line="33" column="19" lean-forward="false" selection-start-line="33" selection-start-column="19" selection-end-line="33" selection-end-column="19" />
           <folding>
-            <element signature="e#1037#1046#0" expanded="true" />
+            <element signature="e#1037#1046#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -831,7 +835,7 @@
         <state relative-caret-position="435">
           <caret line="33" column="19" lean-forward="false" selection-start-line="33" selection-start-column="19" selection-end-line="33" selection-end-column="19" />
           <folding>
-            <element signature="e#1037#1046#0" expanded="true" />
+            <element signature="e#1037#1046#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -867,7 +871,7 @@
         <state relative-caret-position="2580">
           <caret line="176" column="55" lean-forward="false" selection-start-line="176" selection-start-column="55" selection-end-line="176" selection-end-column="55" />
           <folding>
-            <element signature="e#1037#1046#0" expanded="true" />
+            <element signature="e#1037#1046#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -895,7 +899,7 @@
         <state relative-caret-position="2580">
           <caret line="176" column="55" lean-forward="false" selection-start-line="176" selection-start-column="55" selection-end-line="176" selection-end-column="55" />
           <folding>
-            <element signature="e#1037#1046#0" expanded="true" />
+            <element signature="e#1037#1046#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -923,7 +927,7 @@
         <state relative-caret-position="2580">
           <caret line="176" column="55" lean-forward="false" selection-start-line="176" selection-start-column="55" selection-end-line="176" selection-end-column="55" />
           <folding>
-            <element signature="e#1037#1046#0" expanded="true" />
+            <element signature="e#1037#1046#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -951,7 +955,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#1037#1046#0" expanded="true" />
+            <element signature="e#1037#1046#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1055,7 +1059,7 @@
         <state relative-caret-position="419">
           <caret line="166" column="52" lean-forward="false" selection-start-line="166" selection-start-column="52" selection-end-line="166" selection-end-column="52" />
           <folding>
-            <element signature="e#1037#1046#0" expanded="true" />
+            <element signature="e#1037#1046#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1070,8 +1074,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cbicqclive_batch">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="896">
-          <caret line="92" column="26" lean-forward="false" selection-start-line="92" selection-start-column="26" selection-end-line="92" selection-end-column="26" />
+        <state relative-caret-position="772">
+          <caret line="76" column="0" lean-forward="true" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
           <folding />
         </state>
       </provider>

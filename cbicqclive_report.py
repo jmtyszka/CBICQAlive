@@ -30,7 +30,6 @@
 import os
 import string
 import argparse
-import pdfkit
 from pylab import *
 
 # Define template
@@ -244,10 +243,6 @@ def main():
     # Write HTML report page
     qc_report_html = os.path.join(qc_dir, 'index.html')
     open(qc_report_html, "w").write(html_data)
-
-    # Convert HTML page to PDF
-    qc_report_pdf = os.path.join(qc_dir, 'cbicqclive_report.pdf')
-    pdfkit.from_file(qc_report_html, qc_report_pdf)
 
 
 # This is the standard boilerplate that calls the main() function.
