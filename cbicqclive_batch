@@ -88,7 +88,7 @@ echo -n "FFDisp_um_tMean, FFDisp_um_Thresh, FFDisp_um_PercOut, " >> $summary_csv
 echo "FFRot_mdeg_tMean, FFRot_mdeg_Thresh, FFRot_mdeg_PercOut" >> $summary_csv
 for qc_dir in ${qc_root_dir}/*.qclive
 do
-    cat ${qc_dir}/qc_info.csv >> $summary_csv
+>    cat \${qc_dir}/qc_info.csv >> $summary_csv
 done
 EOL
 
