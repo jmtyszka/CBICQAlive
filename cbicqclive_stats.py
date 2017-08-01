@@ -33,8 +33,12 @@
 # Copyright 2013-2017 California Institute of Technology.
 
 import os
+import sys
 import argparse
-from pylab import *
+import matplotlib
+import numpy as np
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 
 
 # Main function
@@ -143,53 +147,53 @@ def main():
 
     # ROI timeseries figure
 
-    fig = figure(figsize=(10, 10))
+    fig = plt.figure(figsize=(10, 10))
 
-    subplot(411)
-    plot(v, brain_t)
-    axhline(y=brain_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
-    title("sMean Brain Signal", x=0.5, y=0.8)
-    
-    subplot(412)
-    plot(v, ghost_t)
-    axhline(y=ghost_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
-    title("sMean Ghost Signal", x=0.5, y=0.8)
-    
-    subplot(413)
-    plot(v, air_t)
-    axhline(y=air_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
-    title("sMean Air Signal", x=0.5, y=0.8)
+    plt.subplot(411)
+    plt.plot(v, brain_t)
+    plt.axhline(y=brain_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
+    plt.title("sMean Brain Signal", x=0.5, y=0.8)
 
-    subplot(414)
-    plot(v, dvars_t)
-    axhline(y=dvars_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
-    title("DVARS", x=0.5, y=0.8)
+    plt.subplot(412)
+    plt.plot(v, ghost_t)
+    plt.axhline(y=ghost_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
+    plt.title("sMean Ghost Signal", x=0.5, y=0.8)
 
-    savefig(os.path.join(qc_dir, 'qc_roi_timeseries.png'), dpi=72, bbox_inches='tight')
+    plt.subplot(413)
+    plt.plot(v, air_t)
+    plt.axhline(y=air_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
+    plt.title("sMean Air Signal", x=0.5, y=0.8)
+
+    plt.subplot(414)
+    plt.plot(v, dvars_t)
+    plt.axhline(y=dvars_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
+    plt.title("DVARS", x=0.5, y=0.8)
+
+    plt.savefig(os.path.join(qc_dir, 'qc_roi_timeseries.png'), dpi=72, bbox_inches='tight')
 
     # Motion timeseries figure
 
     fig.clf()
 
-    subplot(411)
-    plot(v, x_um, 'r', v, y_um, 'g', v, z_um, 'b')
-    title("Displacement (microns)", x=0.5, y=0.8)
+    plt.subplot(411)
+    plt.plot(v, x_um, 'r', v, y_um, 'g', v, z_um, 'b')
+    plt.title("Displacement (microns)", x=0.5, y=0.8)
 
-    subplot(412)
-    plot(v, rx_mdeg, 'r', v, ry_mdeg, 'g', v, rz_mdeg, 'b')
-    title("Rotation (mdeg)", x=0.5, y=0.8)
+    plt.subplot(412)
+    plt.plot(v, rx_mdeg, 'r', v, ry_mdeg, 'g', v, rz_mdeg, 'b')
+    plt.title("Rotation (mdeg)", x=0.5, y=0.8)
 
-    subplot(413)
-    plot(v, dd_um)
-    axhline(y=dd_um_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
-    title("Total F-F Displacement (microns)", x=0.5, y=0.8)
+    plt.subplot(413)
+    plt.plot(v, dd_um)
+    plt.axhline(y=dd_um_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
+    plt.title("Total F-F Displacement (microns)", x=0.5, y=0.8)
 
-    subplot(414)
-    plot(v, dr_mdeg)
-    axhline(y=dr_mdeg_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
-    title("Total F-F Rotation (mdeg)", x=0.5, y=0.8)
+    plt.subplot(414)
+    plt.plot(v, dr_mdeg)
+    plt.axhline(y=dr_mdeg_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
+    plt.title("Total F-F Rotation (mdeg)", x=0.5, y=0.8)
 
-    savefig(os.path.join(qc_dir, 'qc_motion_timeseries.png'), dpi=72, bbox_inches='tight')
+    plt.savefig(os.path.join(qc_dir, 'qc_motion_timeseries.png'), dpi=72, bbox_inches='tight')
 
     # Done
     print('  Finished python statistical analysis')
@@ -261,12 +265,20 @@ def timeseries_stats(s):
     """
     Compute useful stats for numpy timeseries vector
     Identify upper outliers in timeseries using UQ + 1.5 * IQR
-    :param s: numpy vector of real values
-    :return: tmean, thresh, nout, iout
-        tmean = timeseries mean
-        thresh = outlier threshold
-        nout = number of outlier values
-        iout = indices of outliers in timeseries
+
+    :param s: numpy float array
+        Timeseries
+
+    :return:
+        tmean: float
+            Timeseries mean
+        thresh: float
+            Outlier threshold
+        nout: int
+            Number of outlier values
+        iout: numpy int array
+            Indices of outliers in timeseries
+
     """
 
     # Mean of timeseries

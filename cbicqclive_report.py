@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 #
 # Create daily QC HTML report
 #
@@ -176,7 +176,7 @@ def main():
     qc_dir_abs = os.path.abspath(qc_dir)
 
     # Load dataset info from QC directory
-    info_fname = os.path.join(qc_dir, 'qc_info.txt')
+    info_fname = os.path.join(qc_dir, 'qc_info.csv')
     if not os.path.isfile(info_fname):
         print(info_fname + ' does not exist - exiting')
         sys.exit(0)
