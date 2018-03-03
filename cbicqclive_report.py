@@ -70,9 +70,13 @@ td, th {
             <td> $N_vols 
         </tr>
         <tr style="background-color:#AFFF9F">
-            <td> <b> Brain tSFNR </b>
-            <td> <b> $tSFNR_brain </b>
-        </tr>    
+            <td> <b> Inner tSFNR </b>
+            <td> <b> $tSFNR_inner </b>
+        </tr>
+        <tr style="background-color:#AFFF9F">
+            <td> <b> Outer tSFNR </b>
+            <td> <b> $tSFNR_outer </b>
+        </tr>   
     </table>
 </div>
 
@@ -86,10 +90,16 @@ td, th {
             <td> <b> Threshold </b> 
             <td> <b> Percent Outliers 
         </tr>
-            <td> Brain  
-            <td> $brain_tmean 
-            <td> $brain_thresh 
-            <td> $brain_pout%  
+            <td> Inner  
+            <td> $inner_tmean 
+            <td> $inner_thresh 
+            <td> $inner_pout%  
+        </tr>
+            </tr>
+            <td> Outer  
+            <td> $outer_tmean 
+            <td> $outer_thresh 
+            <td> $outer_pout%  
         </tr>
         <tr>
             <td> Nyquist Ghost  
@@ -177,25 +187,29 @@ def main():
         ('qc_dir_abs',     "%s"    % qc_dir_abs),
         ('TR_secs',        "%0.3f" % info[1]),
         ('N_vols',         "%d"    % info[2]),
-        ('tSFNR_brain',    "%0.1f" % info[3]),
-        ('brain_tmean',    "%0.1f" % info[4]),
-        ('brain_thresh',   "%0.1f" % info[5]),
-        ('brain_pout',     "%0.1f" % info[6]),
-        ('ghost_tmean',    "%0.1f" % info[7]),
-        ('ghost_thresh',   "%0.1f" % info[8]),
-        ('ghost_pout',     "%0.1f" % info[9]),
-        ('air_tmean',      "%0.1f" % info[10]),
-        ('air_thresh',     "%0.1f" % info[11]),
-        ('air_pout',       "%0.1f" % info[12]),
-        ('dvars_tmean',    "%0.1f" % info[13]),
-        ('dvars_thresh',   "%0.1f" % info[14]),
-        ('dvars_pout',     "%0.1f" % info[15]),
-        ('dd_um_tmean',    "%0.1f" % info[16]),
-        ('dd_um_thresh',   "%0.1f" % info[17]),
-        ('dd_um_pout',     "%0.1f" % info[18]),
-        ('dr_mdeg_tmean',  "%0.1f" % info[19]),
-        ('dr_mdeg_thresh', "%0.1f" % info[20]),
-        ('dr_mdeg_pout',   "%0.1f" % info[21]),
+        ('tSFNR_inner',    "%0.1f" % info[3]),
+        ('tSFNR_outer',    "%0.1f" % info[4]),
+        ('inner_tmean',    "%0.1f" % info[5]),
+        ('inner_thresh',   "%0.1f" % info[6]),
+        ('inner_pout',     "%0.1f" % info[7]),
+        ('outer_tmean',    "%0.1f" % info[8]),
+        ('outer_thresh',   "%0.1f" % info[9]),
+        ('outer_pout',     "%0.1f" % info[10]),
+        ('ghost_tmean',    "%0.1f" % info[11]),
+        ('ghost_thresh',   "%0.1f" % info[12]),
+        ('ghost_pout',     "%0.1f" % info[13]),
+        ('air_tmean',      "%0.1f" % info[14]),
+        ('air_thresh',     "%0.1f" % info[15]),
+        ('air_pout',       "%0.1f" % info[16]),
+        ('dvars_tmean',    "%0.1f" % info[17]),
+        ('dvars_thresh',   "%0.1f" % info[18]),
+        ('dvars_pout',     "%0.1f" % info[19]),
+        ('dd_um_tmean',    "%0.1f" % info[20]),
+        ('dd_um_thresh',   "%0.1f" % info[21]),
+        ('dd_um_pout',     "%0.1f" % info[22]),
+        ('dr_mdeg_tmean',  "%0.1f" % info[23]),
+        ('dr_mdeg_thresh', "%0.1f" % info[24]),
+        ('dr_mdeg_pout',   "%0.1f" % info[25]),
     ])
 
     # Generate HTML report from template (see above)

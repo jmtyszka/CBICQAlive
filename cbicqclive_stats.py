@@ -64,12 +64,14 @@ def main():
     x = np.loadtxt(qc_ts_fname)
 
     # Parse timeseries into vectors
-    brain_t = x[:, 0]
-    ghost_t = x[:, 1]
-    air_t = x[:, 2]
+    # Four timeseries: Inner, Outer, Nyquist, Air
+    inner_t = x[:, 0]
+    outer_t = x[:, 1]
+    ghost_t = x[:, 2]
+    air_t   = x[:, 3]
 
-    # Volume number vector
-    nv = len(brain_t)
+    # Timeseries vector
+    nv = len(inner_t)
     v = np.linspace(0, nv-1, nv)
 
     # Load DVARS timeseries
@@ -123,7 +125,8 @@ def main():
     #
     # Summary statistics for all timeseries
     #
-    brain_tmean, brain_thresh, brain_nout, brain_pout, _ = timeseries_stats(brain_t)
+    inner_tmean, inner_thresh, inner_nout, inner_pout, _ = timeseries_stats(inner_t)
+    outer_tmean, outer_thresh, outer_nout, outer_pout, _ = timeseries_stats(outer_t)
     ghost_tmean, ghost_thresh, ghost_nout, ghost_pout, _ = timeseries_stats(ghost_t)
     air_tmean, air_thresh, air_nout, air_pout, _ = timeseries_stats(air_t)
     dvars_tmean, dvars_thresh, dvars_nout, dvars_pout, _ = timeseries_stats(dvars_t)
@@ -136,7 +139,8 @@ def main():
     stats_csv_fname = os.path.join(qc_dir, 'qc_stats.csv')
     fd = open(stats_csv_fname, "w")
 
-    fd.write("Brain, %0.1f, %0.1f, %d, %0.1f\n" % (brain_tmean, brain_thresh, brain_nout, brain_pout))
+    fd.write("Inner, %0.1f, %0.1f, %d, %0.1f\n" % (inner_tmean, inner_thresh, inner_nout, inner_pout))
+    fd.write("Outer, %0.1f, %0.1f, %d, %0.1f\n" % (outer_tmean, outer_thresh, outer_nout, outer_pout))
     fd.write("Ghost, %0.1f, %0.1f, %d, %0.1f\n" % (ghost_tmean, ghost_thresh, ghost_nout, ghost_pout))
     fd.write("Air, %0.1f, %0.1f, %d, %0.1f\n" % (air_tmean, air_thresh, air_nout, air_pout))
     fd.write("DVARS, %0.1f, %0.1f, %d, %0.1f\n" % (dvars_tmean, dvars_thresh, dvars_nout, dvars_pout))
@@ -149,22 +153,27 @@ def main():
 
     fig = plt.figure(figsize=(10, 10))
 
-    plt.subplot(411)
-    plt.plot(v, brain_t)
-    plt.axhline(y=brain_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
-    plt.title("sMean Brain Signal", x=0.5, y=0.8)
+    plt.subplot(511)
+    plt.plot(v, inner_t)
+    plt.axhline(y=inner_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
+    plt.title("sMean Inner Signal", x=0.5, y=0.8)
 
-    plt.subplot(412)
+    plt.subplot(512)
+    plt.plot(v, outer_t)
+    plt.axhline(y=outer_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
+    plt.title("sMean Outer Signal", x=0.5, y=0.8)
+
+    plt.subplot(513)
     plt.plot(v, ghost_t)
     plt.axhline(y=ghost_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
     plt.title("sMean Ghost Signal", x=0.5, y=0.8)
 
-    plt.subplot(413)
+    plt.subplot(514)
     plt.plot(v, air_t)
     plt.axhline(y=air_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
     plt.title("sMean Air Signal", x=0.5, y=0.8)
 
-    plt.subplot(414)
+    plt.subplot(515)
     plt.plot(v, dvars_t)
     plt.axhline(y=dvars_thresh, xmin=0, xmax=1, linestyle=':', linewidth=2, color='r')
     plt.title("DVARS", x=0.5, y=0.8)

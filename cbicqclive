@@ -60,13 +60,21 @@ echo ""
 
 # Key filenames
 qc_info=${qc_dir}/qc_info.csv
+
+# Stats images
 qc_mcf=${qc_dir}/qc_mcf
 qc_filt=${qc_dir}/qc_filt
 qc_tmean=${qc_dir}/qc_tmean
 qc_tsd=${qc_dir}/qc_tsd
 qc_tsfnr=${qc_dir}/qc_tsfnr
+
+# Mask images
 qc_mask=${qc_dir}/qc_mask
 qc_brain_mask=${qc_dir}/qc_brain_mask
+qc_inner_mask=${qc_dir}/qc_inner_mask
+qc_outer_mask=${qc_dir}/qc_outer_mask
+
+# Stats text results
 qc_tsnr_mean=${qc_dir}/qc_tsnr_mean.txt
 qc_mcf_par=${qc_dir}/qc_mcf.par
 qc_mcf_mean=${qc_dir}/qc_mcf_mean.txt
@@ -114,8 +122,8 @@ if [ -s ${qc_tsd}.nii.gz ]
 then
     echo "  SD image exists - skipping"
 else
-    echo "  Calculating temporal fluctuation noise SD"
-    fslmaths ${qc_mcf} -Tstd ${qc_tsd}
+    echo "  Calculating temporal fluctuation noise SD (HPF signal)"
+    fslmaths ${qc_filt} -Tstd ${qc_tsd}
 fi
 
 # Voxel-wise tSFNR image
@@ -141,6 +149,8 @@ else
     tmp_signal_dil=${qc_dir}/tmp_signal_dil
     tmp_brain=${qc_dir}/tmp_brain
     tmp_brain_mask=${tmp_brain}_mask
+    tmp_inner_mask=${qc_dir}/tmp_inner
+    tmp_outer_mask=${qc_dir}/tmp_outer
     tmp_nyquist=${qc_dir}/tmp_nyquist
     tmp_upper=${qc_dir}/tmp_upper
     tmp_lower=${qc_dir}/tmp_lower
@@ -155,8 +165,16 @@ else
     fslmaths ${qc_tmean} -thr ${signal_threshold} -bin ${tmp_signal}
 
     # Brain mask (use FSL BET)
-    echo "  Creating brain mask"
+    echo "  Creating brain mask (BET)"
     bet ${qc_tmean} ${tmp_brain} -m -R
+
+    # Erode brain mask by 20 mm to create inner brain mask
+    echo "  Inner Brain: Erode brain mask (20 mm radius kernel)"
+    fslmaths ${tmp_brain_mask} -kernel sphere 20.0 -ero ${tmp_inner_mask}
+
+    # Subtract inner brain from whole brain to outer cortical mask
+    echo "  Outer Brain: Remove inner ROI from brain mask"
+    fslmaths ${tmp_brain_mask} -sub ${tmp_inner_mask} ${tmp_outer_mask}
 
     # Erode signal mask once, then dilate twice
     echo "  Open and dilate signal mask (5 mm radius kernel)"
@@ -184,16 +202,20 @@ else
     # Create air mask by subtracting Nyquist mask from NOT dilated signal mask
     fslmaths ${tmp_signal_dil} -binv -sub ${tmp_nyquist} ${tmp_air}
 
-    # Finally merge all three masks into an indexed file
-    # Phantom = 1
-    # Nyquist = 2
-    # Air     = 3
-    fslmaths ${tmp_nyquist} -mul 2 ${tmp_nyquist}
-    fslmaths ${tmp_air} -mul 3 ${tmp_air}
-    fslmaths ${tmp_brain_mask} -add ${tmp_nyquist} -add ${tmp_air} ${qc_mask}
+    # Finally merge all masks into an indexed file
+    # Inner Brain     = 1
+    # Outer Brain     = 2
+    # Nyquist Ghost   = 3
+    # Air Space       = 4
+    fslmaths ${tmp_outer_mask} -mul 2 ${tmp_outer_mask}
+    fslmaths ${tmp_nyquist} -mul 3 ${tmp_nyquist}
+    fslmaths ${tmp_air} -mul 4 ${tmp_air}
+    fslmaths ${tmp_inner_mask} -add ${tmp_outer_mask} -add ${tmp_nyquist} -add ${tmp_air} ${qc_mask}
 
-    # Save brain mask
+    # Save brain masks (whole, inner, outer)
     imcp ${tmp_brain_mask} ${qc_brain_mask}
+    imcp ${tmp_inner_mask} ${qc_inner_mask}
+    imcp ${tmp_outer_mask} ${qc_outer_mask}
 
     # Clean up temporary images
     echo "  Cleaning up temporary images"
@@ -205,12 +227,17 @@ fi
 scale_factor=2.5
 slicer ${qc_tmean} -s ${scale_factor} -a ${qc_dir}/qc_tmean_ortho.png
 slicer ${qc_tsd} -s ${scale_factor} -a ${qc_dir}/qc_tsd_ortho.png
-slicer ${qc_tsfnr} -s ${scale_factor} -a ${qc_dir}/qc_tsfnr_ortho.png
 slicer ${qc_mask} -s ${scale_factor} -a ${qc_dir}/qc_mask_ortho.png
 
-# Mean SFNR within brain mask
-tSFNR_brain=`fslstats ${qc_tsfnr} -k ${qc_brain_mask} -m`
-echo $tSFNR_brain > ${qc_dir}/qc_tsfnr_brain.txt
+# Colorized tSFNR with fixed intensity scale
+lut=${FSLDIR}/etc/luts/renderjet.lut
+slicer ${qc_tsfnr} -l ${lut} -i 0.0 100.0 -s ${scale_factor} -a ${qc_dir}/qc_tsfnr_ortho.png
+
+# Median SFNR within inner and outer masks
+tSFNR_inner=`fslstats ${qc_tsfnr} -k ${qc_inner_mask} -P 50`
+tSFNR_outer=`fslstats ${qc_tsfnr} -k ${qc_outer_mask} -P 50`
+echo "Inner $tSFNR_inner" > ${qc_dir}/qc_tsfnr.txt
+echo "Outer $tSFNR_outer" >> ${qc_dir}/qc_tsfnr.txt
 
 # DVARS timecourse
 if [ -s ${qc_dvars_ts} ]; then
@@ -234,7 +261,7 @@ cbicqclive_stats.py -i ${qc_dir}
 
 # Write summary info to CSV file
 echo "  Saving QC summary info to ${qc_info}"
-pre_str="$qc_dir, $TR_secs, $N_vols, $tSFNR_brain"
+pre_str="$qc_dir, $TR_secs, $N_vols, $tSFNR_inner, $tSFNR_outer"
 stats_str=`awk '{ printf ", %g, %g, %g", $2, $3, $5 }' $qc_stats`
 echo "${pre_str}${stats_str}" > ${qc_info}
 
