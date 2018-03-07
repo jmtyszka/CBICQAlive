@@ -16,14 +16,15 @@
 # All rights reserved.
 
 
-if [ $# -lt 1 ]; then
-    echo "USAGE   : cbicqclive_batch <BIDS Study Directory>"
-    echo "EXAMPLE : cbicqclive_batch fmri_study"
+if [ $# -lt 2 ]; then
+    echo "USAGE   : cbicqclive_batch <BIDS Study Directory> <invivo|[phantom]>"
+    echo "EXAMPLE : cbicqclive_batch fmri_study invivo"
     exit
 fi
 
 # Parse arguments
 bids_root=$1
+samp_type=$2
 
 # Convert to absolute path
 bids_root="$(cd $bids_root; pwd)"
@@ -68,7 +69,7 @@ do
 	fi
 
 	# Echo command into batch script
-	echo "${HOME}/GitHub/CBICQClive/cbicqclive ${epi_file} ${qc_root_dir}" >> $array_sh
+	echo "${HOME}/GitHub/CBICQClive/cbicqclive ${epi_file} ${qc_root_dir} ${samp_type}" >> $array_sh
 
 done # File list loop
 
@@ -79,8 +80,8 @@ jid=`fsl_sub -q ${queue} -l ${log_dir} -t $array_sh`
 summary_csv=${qc_root_dir}/cbicqc_summary.csv
 cat > $summary_sh << EOL
 #!/bin/bash
-echo -n "Filename, TR_secs, N_vols, tSFNR_brain, " > $summary_csv
-echo -n "Brain_tMean, Brain_Thresh, Brain_PercOut, " >> $summary_csv
+echo -n "Filename, TR_secs, N_vols, tSFNR_outer, " > $summary_csv
+echo -n "Outer_tMean, Outer_Thresh, Outer_PercOut, " >> $summary_csv
 echo -n "Ghost_tMean, Ghost_Thresh, Ghost_PercOut, " >> $summary_csv
 echo -n "Air_tMean, Air_Thresh, Air_PercOut, " >> $summary_csv
 echo -n "DVARS_tMean, DVARS_Thresh, DVARS_PercOut, " >> $summary_csv

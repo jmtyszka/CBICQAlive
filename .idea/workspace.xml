@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8302a1a1-47eb-4f48-b5ad-ec887476a4d2" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/other.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/CBICQClive.iml" afterPath="$PROJECT_DIR$/.idea/CBICQClive.iml" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/cbicqclive" afterPath="$PROJECT_DIR$/cbicqclive" />
+      <change beforePath="$PROJECT_DIR$/cbicqclive_batch" afterPath="$PROJECT_DIR$/cbicqclive_batch" />
       <change beforePath="$PROJECT_DIR$/cbicqclive_report.py" afterPath="$PROJECT_DIR$/cbicqclive_report.py" />
       <change beforePath="$PROJECT_DIR$/cbicqclive_stats.py" afterPath="$PROJECT_DIR$/cbicqclive_stats.py" />
     </list>
@@ -36,8 +34,8 @@
       <file leaf-file-name="cbicqclive_stats.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cbicqclive_stats.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-415">
-              <caret line="111" column="41" lean-forward="true" selection-start-line="111" selection-start-column="41" selection-end-line="111" selection-end-column="41" />
+            <state relative-caret-position="679">
+              <caret line="267" column="30" lean-forward="false" selection-start-line="267" selection-start-column="30" selection-end-line="267" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -72,8 +70,8 @@
       <file leaf-file-name="cbicqclive_batch" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cbicqclive_batch">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="585">
-              <caret line="39" column="0" lean-forward="false" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+            <state relative-caret-position="822">
+              <caret line="82" column="34" lean-forward="false" selection-start-line="82" selection-start-column="34" selection-end-line="82" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -82,8 +80,8 @@
       <file leaf-file-name="cbicqclive_report.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cbicqclive_report.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="818">
-              <caret line="202" column="47" lean-forward="true" selection-start-line="202" selection-start-column="47" selection-end-line="202" selection-end-column="47" />
+            <state relative-caret-position="990">
+              <caret line="131" column="87" lean-forward="true" selection-start-line="131" selection-start-column="87" selection-end-line="131" selection-end-column="87" />
               <folding>
                 <element signature="e#1036#1045#0" expanded="true" />
               </folding>
@@ -94,8 +92,8 @@
       <file leaf-file-name="cbicqclive" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cbicqclive">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="438">
-              <caret line="233" column="41" lean-forward="false" selection-start-line="233" selection-start-column="41" selection-end-line="233" selection-end-column="41" />
+            <state relative-caret-position="352">
+              <caret line="94" column="58" lean-forward="false" selection-start-line="94" selection-start-column="58" selection-end-line="94" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -112,7 +110,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>qa_stat</find>
       <find>out</find>
       <find>out_fname</find>
       <find>nibabel</find>
@@ -121,15 +118,28 @@
       <find>a</find>
       <find>QA</find>
       <find>qa_</find>
-      <find>qc_stats</find>
       <find>subcort</find>
       <find>subcot</find>
-      <find>inner</find>
       <find>brain_out</find>
-      <find>qc_info</find>
       <find>qc_filt</find>
       <find>qc_tsd</find>
       <find>slicer</find>
+      <find>summary</find>
+      <find>qc_info</find>
+      <find>qc_stats.csv</find>
+      <find>bet</find>
+      <find>tmp_signal</find>
+      <find>qc_roi_ts</find>
+      <find>qc_mask</find>
+      <find>qc_</find>
+      <find>qc_stats</find>
+      <find>inner_t</find>
+      <find>tsfnr_br</find>
+      <find>tmp_brain</find>
+      <find>tSFNR</find>
+      <find>_outer</find>
+      <find>inner</find>
+      <find>outer</find>
     </findStrings>
     <replaceStrings>
       <replace>cbicqc</replace>
@@ -160,9 +170,9 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/cbicqclive_batch" />
         <option value="$PROJECT_DIR$/cbicqclive_batch" />
+        <option value="$PROJECT_DIR$/cbicqclive_report.py" />
+        <option value="$PROJECT_DIR$/cbicqclive_report.py" />
         <option value="$PROJECT_DIR$/cbicqclive_stats.py" />
-        <option value="$PROJECT_DIR$/cbicqclive_report.py" />
-        <option value="$PROJECT_DIR$/cbicqclive_report.py" />
         <option value="$PROJECT_DIR$/cbicqclive" />
       </list>
     </option>
@@ -174,10 +184,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="392" />
-    <option name="y" value="56" />
-    <option name="width" value="1587" />
-    <option name="height" value="1109" />
+    <option name="x" value="682" />
+    <option name="y" value="102" />
+    <option name="width" value="1755" />
+    <option name="height" value="1210" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -197,7 +207,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -210,6 +219,7 @@
         </subPane>
       </pane>
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -451,7 +461,7 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="_new_regexPattern" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;.&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
     </configuration>
     <configuration default="true" type="tests" factoryName="Unittests">
@@ -481,7 +491,7 @@
       <module name="CBICQAlive" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;.&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
     </configuration>
     <configuration default="true" type="tests" factoryName="py.test">
@@ -513,7 +523,7 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;.&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
     </configuration>
     <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
@@ -556,7 +566,7 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="_new_regexPattern" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;.&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
     </configuration>
     <configuration default="true" type="tests" factoryName="Unittests">
@@ -571,7 +581,7 @@
       <module name="CBICQAlive" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;.&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
     </configuration>
     <configuration default="true" type="tests" factoryName="py.test">
@@ -587,7 +597,7 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;.&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
     </configuration>
     <list size="3">
@@ -707,11 +717,18 @@
       <option name="project" value="LOCAL" />
       <updated>1520017774854</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Divide brain mask into inner and outer ROIs by erosion of whole brain mask (20 mm radius). Take median tSFNR within inner and outer ROIs for report.">
+      <created>1520037866265</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1520037866265</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="392" y="56" width="1587" height="1109" extended-state="0" />
+    <frame x="682" y="102" width="1755" height="1210" extended-state="0" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -719,7 +736,7 @@
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32840237" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24385633" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22051282" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -762,7 +779,8 @@
     <MESSAGE value="Fixed qc_info loading (drop unnecessary dtype=None)" />
     <MESSAGE value="Fixed correct escape of loop variable in summary script" />
     <MESSAGE value="Set sensible directory name defaults for cbicqclive_batch (dicom, source)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Set sensible directory name defaults for cbicqclive_batch (dicom, source)" />
+    <MESSAGE value="Divide brain mask into inner and outer ROIs by erosion of whole brain mask (20 mm radius). Take median tSFNR within inner and outer ROIs for report." />
+    <option name="LAST_COMMIT_MESSAGE" value="Divide brain mask into inner and outer ROIs by erosion of whole brain mask (20 mm radius). Take median tSFNR within inner and outer ROIs for report." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1114,34 +1132,34 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cbicqclive_batch">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="39" column="0" lean-forward="false" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+        <state relative-caret-position="822">
+          <caret line="82" column="34" lean-forward="false" selection-start-line="82" selection-start-column="34" selection-end-line="82" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cbicqclive_stats.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="679">
+          <caret line="267" column="30" lean-forward="false" selection-start-line="267" selection-start-column="30" selection-end-line="267" selection-end-column="30" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cbicqclive_report.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="818">
-          <caret line="202" column="47" lean-forward="true" selection-start-line="202" selection-start-column="47" selection-end-line="202" selection-end-column="47" />
+        <state relative-caret-position="990">
+          <caret line="131" column="87" lean-forward="true" selection-start-line="131" selection-start-column="87" selection-end-line="131" selection-end-column="87" />
           <folding>
             <element signature="e#1036#1045#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cbicqclive_stats.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-415">
-          <caret line="111" column="41" lean-forward="true" selection-start-line="111" selection-start-column="41" selection-end-line="111" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cbicqclive">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="438">
-          <caret line="233" column="41" lean-forward="false" selection-start-line="233" selection-start-column="41" selection-end-line="233" selection-end-column="41" />
+        <state relative-caret-position="352">
+          <caret line="94" column="58" lean-forward="false" selection-start-line="94" selection-start-column="58" selection-end-line="94" selection-end-column="58" />
           <folding />
         </state>
       </provider>

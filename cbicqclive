@@ -18,14 +18,20 @@
 # All rights reserved.
 
 if [ $# -lt 2 ]; then
-    echo "USAGE   : cbicqclive <4D Nifti fMRI volume> <Output Directory>"
-    echo "EXAMPLE : cbicqclive sub-A/ses-1/func/sub-A/ses-1/task-rest_bold.nii.gz derivatives/qc"
+    echo "USAGE   : cbicqclive <4D Nifti fMRI volume> <Output Directory> <phantom|[invivo]>"
+    echo "EXAMPLE : cbicqclive sub-A/ses-1/func/sub-A/ses-1/task-rest_bold.nii.gz derivatives/qc invivo"
     exit
 fi
 
 # Parse arguments
 epi_file=$1
 out_dir=$2
+
+if [ $# -lt 3 ]; then
+    samp_type='invivo'
+else
+    samp_type=$3
+fi
 
 # Check that EPI file exists
 if [ ! -s ${epi_file} ]; then
@@ -69,10 +75,8 @@ qc_tsd=${qc_dir}/qc_tsd
 qc_tsfnr=${qc_dir}/qc_tsfnr
 
 # Mask images
-qc_mask=${qc_dir}/qc_mask
-qc_brain_mask=${qc_dir}/qc_brain_mask
-qc_inner_mask=${qc_dir}/qc_inner_mask
-qc_outer_mask=${qc_dir}/qc_outer_mask
+qc_signal_mask=${qc_dir}/qc_signal_mask
+qc_labels=${qc_dir}/qc_labels
 
 # Stats text results
 qc_tsnr_mean=${qc_dir}/qc_tsnr_mean.txt
@@ -139,83 +143,72 @@ fi
 # Regional mask creation from temporal mean image
 #
 
-if [ -s ${qc_mask}.nii.gz ]
+if [ -s ${qc_labels}.nii.gz ]
 then
     echo "  Mask image exists - skipping"
 else
 
     # Temporary Nifti files
-    tmp_signal=${qc_dir}/tmp_signal
-    tmp_signal_dil=${qc_dir}/tmp_signal_dil
+    tmp_signal_mask=${qc_dir}/tmp_signal_mask
+    tmp_signal_mask_dil=${qc_dir}/tmp_signal_mask_dil
     tmp_brain=${qc_dir}/tmp_brain
     tmp_brain_mask=${tmp_brain}_mask
-    tmp_inner_mask=${qc_dir}/tmp_inner
-    tmp_outer_mask=${qc_dir}/tmp_outer
-    tmp_nyquist=${qc_dir}/tmp_nyquist
-    tmp_upper=${qc_dir}/tmp_upper
-    tmp_lower=${qc_dir}/tmp_lower
-    tmp_air=${qc_dir}/tmp_air
+    tmp_nyquist_mask=${qc_dir}/tmp_nyquist
+    tmp_upper_mask=${qc_dir}/tmp_upper
+    tmp_lower_mask=${qc_dir}/tmp_lower
+    tmp_air_mask=${qc_dir}/tmp_air
 
     # Signal threshold for basic segmentation
     # 10% of the 99th percentile of intensity
     signal_threshold=`fslstats $qc_tmean -p 99 | awk '{ print $1 * 0.1 }'`
 
-    # Signal mask
-    echo "  Creating signal mask (threshold = ${signal_threshold})"
-    fslmaths ${qc_tmean} -thr ${signal_threshold} -bin ${tmp_signal}
+    # Signal mask for phantoms, brain mask for in vivo data
+    if [ ${samp_type} == 'invivo' ]; then
+        echo "  Creating signal mask (BET)"
+        bet ${qc_tmean} ${tmp_brain} -m -R
+        immv ${tmp_brain_mask} ${tmp_signal_mask}
+    else
+        echo "  Creating signal mask (threshold = ${signal_threshold})"
+        fslmaths ${qc_tmean} -thr ${signal_threshold} -bin ${tmp_signal_mask}
+    fi
 
-    # Brain mask (use FSL BET)
-    echo "  Creating brain mask (BET)"
-    bet ${qc_tmean} ${tmp_brain} -m -R
-
-    # Erode brain mask by 20 mm to create inner brain mask
-    echo "  Inner Brain: Erode brain mask (20 mm radius kernel)"
-    fslmaths ${tmp_brain_mask} -kernel sphere 20.0 -ero ${tmp_inner_mask}
-
-    # Subtract inner brain from whole brain to outer cortical mask
-    echo "  Outer Brain: Remove inner ROI from brain mask"
-    fslmaths ${tmp_brain_mask} -sub ${tmp_inner_mask} ${tmp_outer_mask}
-
-    # Erode signal mask once, then dilate twice
+    # Erode signal mask once, then dilate twice ( = open + dilate )
     echo "  Open and dilate signal mask (5 mm radius kernel)"
-    fslmaths ${tmp_signal} -kernel sphere 5.0 -ero -dilF -dilF ${tmp_signal_dil}
+    fslmaths ${tmp_signal_mask} -kernel sphere 5.0 -ero -dilF -dilF ${tmp_signal_mask_dil}
 
     echo "  Creating Nyquist mask"
     # Determine y dimension (PE dim in EPI)
     half_ny=`fslinfo ${qc_tmean} | awk '{ if ($1 == "dim2") print $2/2 }'`
 
     # Extract upper and lower halves of dilated volume mask in Y dimension (PE)
-    fslroi ${tmp_signal_dil} ${tmp_lower} 0 -1 0 ${half_ny} 0 -1 0 -1
-    fslroi ${tmp_signal_dil} ${tmp_upper} 0 -1 ${half_ny} -1 0 -1 0 -1
+    fslroi ${tmp_signal_mask_dil} ${tmp_lower_mask} 0 -1 0 ${half_ny} 0 -1 0 -1
+    fslroi ${tmp_signal_mask_dil} ${tmp_upper_mask} 0 -1 ${half_ny} -1 0 -1 0 -1
 
     # Create shifted (Nyqusit) mask from swapped upper and lower masks
-    fslmerge -y ${tmp_nyquist} ${tmp_upper} ${tmp_lower}
+    fslmerge -y ${tmp_nyquist_mask} ${tmp_upper_mask} ${tmp_lower_mask}
 
     # Correct y offset in sform matrix
-    sform=`fslorient -getsform ${tmp_signal}`
-    fslorient -setsform ${sform} ${tmp_nyquist}
+    sform=`fslorient -getsform ${tmp_signal_mask}`
+    fslorient -setsform ${sform} ${tmp_nyquist_mask}
 
     # XOR Nyquist and dilated signal masks
-    fslmaths ${tmp_nyquist} -mul ${tmp_signal_dil} -mul -1.0 -add ${tmp_nyquist} ${tmp_nyquist}
+    fslmaths ${tmp_nyquist_mask} -mul ${tmp_signal_mask_dil} -mul -1.0 -add ${tmp_nyquist_mask} ${tmp_nyquist_mask}
 
     echo "  Creating air mask"
     # Create air mask by subtracting Nyquist mask from NOT dilated signal mask
-    fslmaths ${tmp_signal_dil} -binv -sub ${tmp_nyquist} ${tmp_air}
+    fslmaths ${tmp_signal_mask_dil} -binv -sub ${tmp_nyquist_mask} ${tmp_air_mask}
 
-    # Finally merge all masks into an indexed file
-    # Inner Brain     = 1
-    # Outer Brain     = 2
-    # Nyquist Ghost   = 3
-    # Air Space       = 4
-    fslmaths ${tmp_outer_mask} -mul 2 ${tmp_outer_mask}
-    fslmaths ${tmp_nyquist} -mul 3 ${tmp_nyquist}
-    fslmaths ${tmp_air} -mul 4 ${tmp_air}
-    fslmaths ${tmp_inner_mask} -add ${tmp_outer_mask} -add ${tmp_nyquist} -add ${tmp_air} ${qc_mask}
+    # Finally merge all masks into an ROI label file
+    # Signal          = 1
+    # Nyquist Ghost   = 2
+    # Air Space       = 3
+    fslmaths ${tmp_signal_mask} -mul 1 ${tmp_signal_mask}
+    fslmaths ${tmp_nyquist_mask} -mul 2 ${tmp_nyquist_mask}
+    fslmaths ${tmp_air_mask} -mul 3 ${tmp_air_mask}
+    fslmaths ${tmp_signal_mask} -add ${tmp_nyquist_mask} -add ${tmp_air_mask} ${qc_labels}
 
-    # Save brain masks (whole, inner, outer)
-    imcp ${tmp_brain_mask} ${qc_brain_mask}
-    imcp ${tmp_inner_mask} ${qc_inner_mask}
-    imcp ${tmp_outer_mask} ${qc_outer_mask}
+    # Save signal mask
+    imcp ${tmp_signal_mask} ${qc_signal_mask}
 
     # Clean up temporary images
     echo "  Cleaning up temporary images"
@@ -227,24 +220,21 @@ fi
 scale_factor=2.5
 slicer ${qc_tmean} -s ${scale_factor} -a ${qc_dir}/qc_tmean_ortho.png
 slicer ${qc_tsd} -s ${scale_factor} -a ${qc_dir}/qc_tsd_ortho.png
-slicer ${qc_mask} -s ${scale_factor} -a ${qc_dir}/qc_mask_ortho.png
+slicer ${qc_labels} -s ${scale_factor} -a ${qc_dir}/qc_labels_ortho.png
 
 # Colorized tSFNR with fixed intensity scale
-lut=${FSLDIR}/etc/luts/renderjet.lut
-slicer ${qc_tsfnr} -l ${lut} -i 0.0 100.0 -s ${scale_factor} -a ${qc_dir}/qc_tsfnr_ortho.png
+slicer ${qc_tsfnr} -i 0.0 100.0 -s ${scale_factor} -a ${qc_dir}/qc_tsfnr_ortho.png
 
-# Median SFNR within inner and outer masks
-tSFNR_inner=`fslstats ${qc_tsfnr} -k ${qc_inner_mask} -P 50`
-tSFNR_outer=`fslstats ${qc_tsfnr} -k ${qc_outer_mask} -P 50`
-echo "Inner $tSFNR_inner" > ${qc_dir}/qc_tsfnr.txt
-echo "Outer $tSFNR_outer" >> ${qc_dir}/qc_tsfnr.txt
+# Median tSFNR within signal mask
+tSFNR=`fslstats ${qc_tsfnr} -k ${qc_signal_mask} -P 50`
+echo "Signal $tSFNR" >> ${qc_dir}/qc_tsfnr.txt
 
 # DVARS timecourse
 if [ -s ${qc_dvars_ts} ]; then
     echo "  DVARS timecourse exists - skipping"
 else
-    echo "  Calculating DVARS timecourse within brain mask for motion corrected data"
-    fsl_motion_outliers -i ${qc_mcf} -m ${qc_brain_mask} -o /dev/null -s ${qc_dvars_ts} --dvars --nomoco
+    echo "  Calculating DVARS timecourse within signal mask for motion corrected data"
+    fsl_motion_outliers -i ${qc_mcf} -m ${qc_signal_mask} -o /dev/null -s ${qc_dvars_ts} --dvars --nomoco
 fi
 
 # Extract time-series stats within each ROI
@@ -253,7 +243,7 @@ if [ -s ${qc_roi_ts} ]; then
 else
     echo "  Extracting mean signal timecourses for each region"
     # Timecourse of mean signal within each mask label
-    fslmeants -i ${qc_mcf} -o ${qc_roi_ts} --label=${qc_mask}
+    fslmeants -i ${qc_mcf} -o ${qc_roi_ts} --label=${qc_labels}
 fi
 
 # Generate summary statistics and plots in QC directory
@@ -261,7 +251,7 @@ cbicqclive_stats.py -i ${qc_dir}
 
 # Write summary info to CSV file
 echo "  Saving QC summary info to ${qc_info}"
-pre_str="$qc_dir, $TR_secs, $N_vols, $tSFNR_inner, $tSFNR_outer"
+pre_str="$qc_dir, $TR_secs, $N_vols, $tSFNR"
 stats_str=`awk '{ printf ", %g, %g, %g", $2, $3, $5 }' $qc_stats`
 echo "${pre_str}${stats_str}" > ${qc_info}
 
