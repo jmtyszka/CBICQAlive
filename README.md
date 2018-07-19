@@ -4,7 +4,7 @@ MRI quality control scripts for in vivo EPI data
 Full documentation for the methods used and for interpretation of the QC report can be found in the Wiki for this repository.
 
 ## Dependencies:
-* Python 3x
+* Python 3.6
 * FSL 5x
 
 ## Installation
