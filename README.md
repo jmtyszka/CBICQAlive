@@ -1,6 +1,8 @@
 # CBICQClive
 MRI quality control scripts for in vivo EPI data
 
+[![DOI](https://zenodo.org/badge/51806508.svg)](https://zenodo.org/badge/latestdoi/51806508)
+
 Full documentation for the methods used and for interpretation of the QC report can be found in the Wiki for this repository.
 
 ## Dependencies:
